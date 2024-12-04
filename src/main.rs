@@ -9,12 +9,17 @@ use axum::{
     Router,
 };
 use tower_http::cors::{CorsLayer, Any};
-use tracing_subscriber;
+use tracing::Level;
+use tracing_subscriber::{fmt};
 
 #[tokio::main]
 async fn main() {
-    // Initialize logging
-    tracing_subscriber::fmt::init();
+    // Initialize tracing with environment filter for dynamic log level control
+    tracing_subscriber::fmt()
+        .with_max_level(Level::INFO) // Set default log level from environment variable
+        .with_target(true) // Include the target in logs
+        .pretty() // Format logs to be more human-readable (formatted output)
+        .init();
 
     // CORS configuration
     let cors = CorsLayer::new()
